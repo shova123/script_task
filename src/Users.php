@@ -23,6 +23,12 @@
       function handleError(){
 
       }
+
+      function insertData()
+      {
+
+        
+      }
  }
  
 
