@@ -1,0 +1,12 @@
+version: "2.2"
+ 
+services:
+    script_task:
+        image: script_task:latest
+        container_name: script_task
+    web:
+        build: .
+        ports: 
+         - '80:80'
+
+ 
