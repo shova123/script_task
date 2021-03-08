@@ -8,6 +8,7 @@ class ComposerStaticInit3cd02791fa506be6904db7d00df81bcd
 {
     public static $files = array (
         'ad9e68e45be3cad75cb1fa00c1c33ee2' => __DIR__ . '/../..' . '/src/Users.php',
+        '17ca0c281ac1664eb40bc52b744c7a98' => __DIR__ . '/../..' . '/src/database.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

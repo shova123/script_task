@@ -4,17 +4,34 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require 'vendor/autoload.php';
 
-$command = array(
-    "files:",
-    "create_table:",
-    "u::",
-    "p::",
-    "h::"
+$longoptions  = array(
+    "f:",            // name of CSV file to be parsed --file "users.csv"
+    "create_table:",    // this will create table with the table name --create_table "users"
+    "dry_run:",          // with value check
+    "help",             // this will give the help instruction with the directives options --help
 );
-$file_name = getopt("f:");
-var_dump($file_name);
-// execution_command($file);
+
+$shortoptions  = "";
+$shortoptions .= "u::"; // MYSQL username -u="root"
+$shortoptions .= "p::"; // MYSQL password -p="*******"
+$shortoptions .= "h::"; // MYSQL hostname -h="localhost"
+
+$options = getopt($shortoptions, $longoptions); //to get options from the command line argument list
+print_r($options);
 $dir = getcwd(); // current directory
+$file_name = $options['f'];
+
+$param['username'] = $options['u'];
+$param['password'] = $options['p'];
+$param['hostname'] = $options['h'];
+
+$param['create_table'] = $options['create_table'];
+
 $objUser = new Users();
-$objUser ->extractData($dir, $file_name);
+$objdatabase =  new Database();
+//$objdatabase -> connect ($param);
+
+$objUser -> extractData($dir, $file_name);
+
+
 ?>

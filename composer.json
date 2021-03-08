@@ -1,5 +1,5 @@
 {
     "autoload": {
-        "files": ["/src/Users.php"]
+        "files": ["src/Users.php","src/database.php"]
     }
 }
