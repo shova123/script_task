@@ -5,8 +5,9 @@ require 'vendor/autoload.php';
 Class Database{
 
     private $db;  //The db handle
+    private $table_name;
    
-    public function connect($params) {
+   function __construct($params) {
             $isdb =false;
         
             $host=$params['hostname'];
@@ -14,10 +15,14 @@ Class Database{
             $dbname ="catalyst"; 
             $user=$params['username'];
             $pword = $params['password'];
-            $table_name = $params['create_table'];
-            $db  = pg_connect("host=$host port=$port user=$user password=$pword");
-            $cmd = 'psql -U postgres -c "SELECT schema_name FROM information_schema.schemata WHERE schema_name = \'catalyst\';"';
-            if($this -> exec($cmd)){
+            $this -> table_name = $params['create_table'];
+            $this -> db  = pg_connect("host=$host port=$port user=$user password=$pword");
+          
+            // $cmd = "SELECT schema_name FROM information_schema.schemata WHERE schema_name ='catalyst'";
+            $cmd = "select exists(
+                SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = lower('catalyst')
+               );";
+            if( pg_query($this->db,$cmd)){
                 $sql = "DROP DATABASE [IF EXISTS] $dbname";
                 $isdb =true;
             }
@@ -30,18 +35,18 @@ Class Database{
                     exit();
                 }
                 else{
-                    echo 'Success, database "<b>'.$dbname.'</b>" is created.<br>';
+                    fwrite(STDOUT, 'Success, database "<b>'.$dbname.'</b>" is created.<br>');
                 }
                 
             }
+            $sql = ["CREATE TABLE IF NOT EXISTS $this ->table_name (
+                id SERIAL PRIMARY KEY,
+                firstname CITEXT,
+                surname CITEXT,
+                email CITEXT,
+             );"];
+           pg_query($this->db,$sql);
            
-            $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-                                                    id SERIAL PRIMARY KEY,
-                                                    firstname CITEXT,
-                                                    surname CITEXT,
-                                                    email CITEXT,
-                                                 )";
-            $this->exec($sql);
             return true;
 
     }
@@ -52,7 +57,7 @@ Class Database{
         $firstname = $data['firstname'];
         $surname   = $data['surname'] ; 
         $email     = $data['email'] ;
-        $sql = "INSERT INTO books (firstname, surname, email) VALUES ('$firstname', '$surname', '$email')";
+        $sql = "INSERT INTO $this -> table_name (firstname, surname, email) VALUES ('$firstname', '$surname', '$email')";
         $result = pg_query($this->db, $sql);
         if (pg_last_error()) exit(pg_last_error());
         $this->last_id = pg_fetch_result($result, 0);
@@ -62,8 +67,9 @@ Class Database{
     // For UPDATE, DELETE and CREATE TABLE
     public function exec($sql)
     {
-        $result = pg_query($this->db, $sql);
-        if (pg_last_error()) exit(pg_last_error());
+        
+        // $result = pg_query($this->db, $sql);
+        // if (pg_last_error()) exit(pg_last_error());
         
         return true;
     }

@@ -1,0 +1,10 @@
+[0;1;32m●[0m postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (exited)[0m since Tue 2021-03-09 00:42:51 AEDT; 4min 4s ago
+   Main PID: 110777 (code=exited, status=0/SUCCESS)
+      Tasks: 0 (limit: 18999)
+     Memory: 0B
+     CGroup: /system.slice/postgresql.service
+
+Mar 09 00:42:51 hackville-OptiPlex-9020 systemd[1]: Starting PostgreSQL RDBMS...
+Mar 09 00:42:51 hackville-OptiPlex-9020 systemd[1]: Finished PostgreSQL RDBMS.

@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require 'vendor/autoload.php';
+//php src/user_upload.php --f=users.csv --create_table=users -u=root -p=postgres -h=localhost
 
 $longoptions  = array(
     "f:",            // name of CSV file to be parsed --file "users.csv"
@@ -28,10 +29,8 @@ $param['hostname'] = $options['h'];
 $param['create_table'] = $options['create_table'];
 
 $objUser = new Users();
-$objdatabase =  new Database();
-//$objdatabase -> connect ($param);
-
-$objUser -> extractData($dir, $file_name);
+$objdatabase =  new Database($param);
+ $objUser -> extractData($dir, $file_name,$objdatabase);
 
 
 ?>

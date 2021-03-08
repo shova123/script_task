@@ -8,7 +8,7 @@
     
       function __construct()
       {
-          $this -> database = new Database();
+         
       }
 
       function validateFileName($filename) {
@@ -56,54 +56,59 @@
           
       }
 
-      function extractData($dir, $file_name)
+      function extractData($dir, $file_name, $database)
       {
           if(is_dir($dir)){
             if ($dh = opendir($dir)) {
                 
-                $dir_path = $dir."/".$file_name['f']; // csv file path /var/www/html/script_task/users.csv
-                echo $dir;
+                $dir_path = $dir."/".$file_name; // csv file path /var/www/html/script_task/users.csv
+                
                 $file_info = pathinfo($dir_path); //pathinfo return array value of file information
                         
                 $csvFile = fopen($dir_path,'r');
                 
                 $countRows = 0;
-                
-                while(($row_line = fgetcsv($csvFile, 1000, ",")) !== FALSE){
-    
-                    $name    = $row_line[0];
-                    $surname = $row_line[1];
-                    $email   = $row_line[2];
-    
-                    $name    = $this -> validateName($name);
-                    $surname = $this -> validateName($surname);
-                    
-                    if($name != "Name" || $surname != "Surname"){ // Condition to exclude first line of parsed CSV file which has column indexing name that should'nt be inserted in the DB table
-    
-                        $email = $this ->validateEmail($email); // validation function call to validate email filters
-                        
-                        //if only email validate insertion of data occurs
-                        if($email == TRUE){  
-                            $data['firstname'] = $name;
-                            $data['surname']   =$surname;
-                            $data['email'] = $email; 
-                            $this -> database -> insert($data); 
-                            $countRows++;
-                        
-                        } else {
+                $file_ext = $file_info['extension'];
+              if(!empty($file_ext) && $file_ext == "csv"){
+                      
+                      while(($row_line = fgetcsv($csvFile, 1000, ",")) !== FALSE){
+          
+                          $name    = $row_line[0];
+                          $surname = $row_line[1];
+                          $email   = $row_line[2];
+          
+                          $name    = $this -> validateName($name);
+                          $surname = $this -> validateName($surname);
+                          
+                          if($name != "Name" || $surname != "Surname"){ // Condition to exclude first line of parsed CSV file which has column indexing name that should'nt be inserted in the DB table
+          
+                              $email = $this ->validateEmail($email); // validation function call to validate email filters
+                              
+                              //if only email validate insertion of data occurs
+                              if($email == TRUE){  
+                                  $data['firstname'] = $name;
+                                  $data['surname']   =$surname;
+                                  $data['email'] = $email; 
+                                  $database -> insert($data); 
+                                  $countRows++;
+                              
+                              } else {
 
-                          $this -> handleError ('email');
+                                $this -> handleError ('email');
 
-                        }       
-                    } 
-                
-                }
+                              }       
+                          } 
+                      
+                      }
+                    }else{
+                      fwrite(STDOUT, "\n File found on the directory is not .CSV file format: ERROR! \n");
+                  } 
 
-                if(!empty($countRows)){
+            if(!empty($countRows)){
 
-                    fwrite(STDOUT, "\n Total:$countRows number of rows has been inserted \n");
+                fwrite(STDOUT, "\n Total:$countRows number of rows has been inserted \n");
 
-                }
+            }
                 
           }
         }
