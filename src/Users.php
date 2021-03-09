@@ -25,9 +25,9 @@
       function validateEmail($input_email){
         $input_email = trim($input_email);// removing the unwanted space from the strings
         $input_email = strtolower($input_email); //string to lower case
-        $input_email = str_replace( array( '\'', '"',  //remove special character
-        ',' , ';', '<', '>' ), '', $input_email); 
-        return filter_var($input_email, FILTER_VALIDATE_EMAIL);// filter_var php function to filter the email
+       
+         return filter_var($input_email, FILTER_VALIDATE_EMAIL) && preg_match( 
+          "^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $input_email); 
       }
 
       function validateName($name) {
@@ -71,6 +71,7 @@
                 
                 $countRows = 0;
                 $file_ext = $file_info['extension'];
+                $invalid_email = "";
               if(!empty($file_ext) && $file_ext == "csv"){
                       
                       while(($row_line = fgetcsv($csvFile, 1000, ",")) !== FALSE){
@@ -78,6 +79,7 @@
                           $name    = $row_line[0];
                           $surname = $row_line[1];
                           $email   = $row_line[2];
+                         
           
                           $name    = $this -> validateName($name);
                           $surname = $this -> validateName($surname);
@@ -87,14 +89,17 @@
                               $email = $this ->validateEmail($email); // validation function call to validate email filters
                               
                               //if only email validate insertion of data occurs
-                              if($email == TRUE){  
+                              if($email == 1){  
                                   $data['firstname'] = $name;
                                   $data['surname']   =$surname;
                                   $data['email'] = $email; 
                                   $database -> insert($data); 
                                   $countRows++;
                               
-                              }      
+                              }   else {
+                                $invalid_email .= " <br/>".$email;
+                              }  
+                             
                           } 
                       
                       }
@@ -104,7 +109,7 @@
 
             if(!empty($countRows)){
 
-                fwrite(STDOUT, "\n Total:$countRows number of rows has been inserted \n");
+                fwrite(STDOUT, "\n Total:$countRows number of rows has been inserted \n ");
 
             }
                 
