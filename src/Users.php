@@ -25,7 +25,8 @@
       function validateEmail($input_email){
         $input_email = trim($input_email);// removing the unwanted space from the strings
         $input_email = strtolower($input_email); //string to lower case
-
+        $input_email = str_replace( array( '\'', '"',  //remove special character
+        ',' , ';', '<', '>' ), '', $input_email); 
         return filter_var($input_email, FILTER_VALIDATE_EMAIL);// filter_var php function to filter the email
       }
 
@@ -33,6 +34,8 @@
         $name = trim($name);// removing the unwanted space from the strings
         $name = strtolower($name); //string to lower case
         $name = ucfirst($name); //strings first character to be capitalised
+        $name = str_replace( array( '\'', '"',  //remove special character
+        ',' , ';', '<', '>' ), '', $name); 
         return $name;
       }
 
@@ -93,7 +96,7 @@
                                   $countRows++;
                               
                               } else {
-
+                                echo $email;
                                 $this -> handleError ('email');
 
                               }       

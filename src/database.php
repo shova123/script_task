@@ -18,7 +18,7 @@ Class Database{
             $this -> table_name = $params['create_table'];
             $this -> db  = pg_connect("host=$host port=$port user=$user password=$pword");
           
-            // $cmd = "SELECT schema_name FROM information_schema.schemata WHERE schema_name ='catalyst'";
+          
             $cmd = "select exists(
                 SELECT datname FROM pg_catalog.pg_database WHERE datname = 'catalyst'
                );";
@@ -42,6 +42,7 @@ Class Database{
                 }
                 $isdb =true;
             }
+
             $table_name = $this ->table_name;
             $sql = "CREATE TABLE IF NOT EXISTS $table_name(
                 id SERIAL PRIMARY KEY,
@@ -49,7 +50,10 @@ Class Database{
                 surname varchar(45) NOT NULL,
                 email varchar(100) NOT NULL
              )";
-            pg_query($this->db,$sql);
+            if (pg_query($this->db,$sql)){
+                fwrite(STDOUT, 'Success, Table  "<b>'.$table_name.'</b>" is created.<br>');
+            }
+            if (pg_last_error()) exit(pg_last_error());
            
             return true;
 
@@ -67,16 +71,6 @@ Class Database{
         if (pg_last_error()) exit(pg_last_error());
         $this->last_id = pg_fetch_result($result, 0);
         return $this->last_id;
-    }
-
-    // For UPDATE, DELETE and CREATE TABLE
-    public function exec($sql)
-    {
-        
-        // $result = pg_query($this->db, $sql);
-        // if (pg_last_error()) exit(pg_last_error());
-        
-        return true;
     }
 
 }
