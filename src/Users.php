@@ -114,6 +114,36 @@
 
       }
 
+      function dryRun($dry_run, $dir, $csv_file){
+        //if dry run is enabled then simply return 
+        if($dry_run == "check"){
+            if(is_dir($dir)){
+                if ($dh = opendir($dir)) {
+                    
+                    $dir_path = $dir."/"."$csv_file"; // csv file path /var/www/html/catalystIT/users.csv
+                    $file_info = pathinfo($dir_path);
+                    $file_ext = $file_info['extension'];
+                    if(!empty($file_ext) && $file_ext == "csv"){
+                        $csvFile = fopen($dir_path,'r');
+                        
+                        $counter = 0;
+                        while(($row_line = fgetcsv($csvFile, 1000, ",")) !== FALSE){ $counter++;}
+                        
+                        if($counter> 0){
+                            fwrite(STDOUT, "\n File found on the directory and your code reading tested: SUCCESS! \n");
+                        }
+                    }else{
+                        fwrite(STDOUT, "\n File found on the directory is not .CSV file format: ERROR! \n");
+                    }
+                }
+            }
+        }else{
+        //if dry run is disabled, then execute the command
+        fwrite(STDOUT, "\n execute function  Error in your execution command: \n Please check --help command (php user_upload.php --help) \n");
+        }
+        exit();
+    }
+
       
  }
  

@@ -1,6 +1,10 @@
 
  
-
+ubuntu:
+    image: ubuntu:20.4
+    container_name: ubuntu-container
+    links: 
+        - php
 php:
     image: php:7.4-fpm-alpine
     container_name: php-container
