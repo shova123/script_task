@@ -48,7 +48,6 @@
             break;
           case "file":
             fwrite(STDOUT, "\n File name incorrect | Must be users.csv : ERROR! \n");
-            exit();
             
             break;
                      
@@ -95,11 +94,7 @@
                                   $database -> insert($data); 
                                   $countRows++;
                               
-                              } else {
-                                echo $email;
-                                $this -> handleError ('email');
-
-                              }       
+                              }      
                           } 
                       
                       }

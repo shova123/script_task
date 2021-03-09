@@ -5,9 +5,9 @@ require 'vendor/autoload.php';
 Class Database{
 
     private $db;  //The db handle
-    private $table_name;
+    private $table_name;//table name
    
-   function __construct($params) {
+    function __construct($params) {
             $isdb =false;
         
             $host=$params['hostname'];
@@ -38,7 +38,7 @@ Class Database{
                     exit();
                 } else {
 
-                    fwrite(STDOUT, 'Success, database "<b>'.$dbname.'</b>" is created.<br>');
+                    fwrite(STDOUT, 'Database "'.$dbname.'" is created.<br>');
                 }
                 $isdb =true;
             }
@@ -51,10 +51,12 @@ Class Database{
                 email varchar(100) NOT NULL
              )";
             if (pg_query($this->db,$sql)){
-                fwrite(STDOUT, 'Success, Table  "<b>'.$table_name.'</b>" is created.<br>');
+                fwrite(STDOUT, 'Table  "'.$table_name.'" is created.<br>');
+            } else {
+                fwrite(STDOUT, pg_last_error());
+                exit();
             }
-            if (pg_last_error()) exit(pg_last_error());
-           
+                       
             return true;
 
     }
@@ -68,7 +70,10 @@ Class Database{
         $table_name = $this -> table_name;
         $sql = "INSERT INTO $table_name (firstname, surname, email) VALUES ('$firstname', '$surname', '$email')";
         $result = pg_query($this->db, $sql);
-        if (pg_last_error()) exit(pg_last_error());
+        if (pg_last_error()){
+            fwrite(STDOUT, pg_last_error());
+                exit();
+        }
         $this->last_id = pg_fetch_result($result, 0);
         return $this->last_id;
     }
