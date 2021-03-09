@@ -14,9 +14,9 @@ $longoptions  = array(
 );
 
 $shortoptions  = "";
-$shortoptions .= "u::"; // MYSQL username -u="root"
-$shortoptions .= "p::"; // MYSQL password -p="*******"
-$shortoptions .= "h::"; // MYSQL hostname -h="localhost"
+$shortoptions .= "u::"; // Pgsql username -u="root"
+$shortoptions .= "p::"; // Pgsql password -p="*******"
+$shortoptions .= "h::"; // Pgsql hostname -h="localhost"
 
 $options = getopt($shortoptions, $longoptions); //to get options from the command line argument list
 $objUser = new Users();

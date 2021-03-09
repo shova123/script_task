@@ -16,6 +16,17 @@ postgres:
         - POSTGRES_PORT=5432
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
-        
+jenkins:
+       image: jenkinsci/jenkins:lts
+       container_name: jenkins-container
+       restart: always
+       ports:
+           - "8080:8080"
+           - '50000:50000'
+       volumes:
+       - '/var/run/docker.sock:/var/run/docker.sock'
+       - '/data/jenkins/jenkins_home:/var/jenkins_home'
+       environment:
+       - "JENKINS_OPTS=--prefix=/jenkins"
 
  
