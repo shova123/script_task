@@ -20,32 +20,36 @@ Class Database{
           
             // $cmd = "SELECT schema_name FROM information_schema.schemata WHERE schema_name ='catalyst'";
             $cmd = "select exists(
-                SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = lower('catalyst')
+                SELECT datname FROM pg_catalog.pg_database WHERE datname = 'catalyst'
                );";
-            if( pg_query($this->db,$cmd)){
-                $sql = "DROP DATABASE [IF EXISTS] $dbname";
-                $isdb =true;
+            if( pg_query($this->db,$cmd)) {
+             
+                $sql  = "DROP DATABASE IF EXISTS $dbname";
+                pg_query($this -> db, $sql);
+                $isdb = false;
             }
 
             if ($isdb == false) {
                 $sql = "CREATE DATABASE $dbname ENCODING 'UTF8'";
                 pg_query($this -> db, $sql);
-                if (pg_last_error($this -> db)){
+
+                if(pg_last_error($this -> db)){
                     fwrite(STDOUT, pg_last_error($this -> db));
                     exit();
-                }
-                else{
+                } else {
+
                     fwrite(STDOUT, 'Success, database "<b>'.$dbname.'</b>" is created.<br>');
                 }
-                
+                $isdb =true;
             }
-            $sql = ["CREATE TABLE IF NOT EXISTS $this ->table_name (
+            $table_name = $this ->table_name;
+            $sql = "CREATE TABLE IF NOT EXISTS $table_name(
                 id SERIAL PRIMARY KEY,
-                firstname CITEXT,
-                surname CITEXT,
-                email CITEXT,
-             );"];
-           pg_query($this->db,$sql);
+                firstname varchar(45) NOT NULL,
+                surname varchar(45) NOT NULL,
+                email varchar(100) NOT NULL
+             )";
+            pg_query($this->db,$sql);
            
             return true;
 
@@ -57,7 +61,8 @@ Class Database{
         $firstname = $data['firstname'];
         $surname   = $data['surname'] ; 
         $email     = $data['email'] ;
-        $sql = "INSERT INTO $this -> table_name (firstname, surname, email) VALUES ('$firstname', '$surname', '$email')";
+        $table_name = $this -> table_name;
+        $sql = "INSERT INTO $table_name (firstname, surname, email) VALUES ('$firstname', '$surname', '$email')";
         $result = pg_query($this->db, $sql);
         if (pg_last_error()) exit(pg_last_error());
         $this->last_id = pg_fetch_result($result, 0);
