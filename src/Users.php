@@ -98,9 +98,9 @@
                           } 
                       
                       }
-                    }else{
-                      fwrite(STDOUT, "\n File found on the directory is not .CSV file format: ERROR! \n");
-                  } 
+              }else{
+                      fwrite(STDOUT, "\n ERROR!: File provided in command is not .CSV file format \n");
+                   } 
 
             if(!empty($countRows)){
 
@@ -120,7 +120,7 @@
             if(is_dir($dir)){
                 if ($dh = opendir($dir)) {
                     
-                    $dir_path = $dir."/"."$csv_file"; // csv file path /var/www/html/catalystIT/users.csv
+                    $dir_path = $dir."/"."$csv_file"; 
                     $file_info = pathinfo($dir_path);
                     $file_ext = $file_info['extension'];
                     if(!empty($file_ext) && $file_ext == "csv"){
@@ -130,16 +130,16 @@
                         while(($row_line = fgetcsv($csvFile, 1000, ",")) !== FALSE){ $counter++;}
                         
                         if($counter> 0){
-                            fwrite(STDOUT, "\n File found on the directory and your code reading tested: SUCCESS! \n");
+                            fwrite(STDOUT, "\n Dry Run testing successfully Done! \n");
                         }
                     }else{
-                        fwrite(STDOUT, "\n File found on the directory is not .CSV file format: ERROR! \n");
+                        fwrite(STDOUT, "\n ERROR! : File found on the directory is not .CSV file format\n");
                     }
                 }
             }
         }else{
         //if dry run is disabled, then execute the command
-        fwrite(STDOUT, "\n execute function  Error in your execution command: \n Please check --help command (php user_upload.php --help) \n");
+        fwrite(STDOUT, "\n Something gone wrong: \n Please check --help command (php src/user_upload.php --help) \n");
         }
         exit();
     }

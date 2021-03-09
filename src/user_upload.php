@@ -19,7 +19,8 @@ $shortoptions .= "p::"; // MYSQL password -p="*******"
 $shortoptions .= "h::"; // MYSQL hostname -h="localhost"
 
 $options = getopt($shortoptions, $longoptions); //to get options from the command line argument list
-
+$objUser = new Users();
+$dir = getcwd(); // current directory
 if(array_key_exists("help",$options)){
     
     $help_message = "
@@ -39,6 +40,8 @@ if(array_key_exists("help",$options)){
     - run you file -> php src/user_upload.php --file=users.csv --create_table=users -u=postgres -p=postgres -h=localhost
     - run to get help -> php user_upload.php --help
        \n
+    -command for dry_run test is :php src/user_upload.php --dry_run check --file users.csv
+
        ";
     
     fwrite(STDOUT, $help_message);
@@ -46,7 +49,17 @@ if(array_key_exists("help",$options)){
     
 }
 
-$dir = getcwd(); // current directory
+if(array_key_exists("dry_run",$options) && array_key_exists("file",$options)){
+    $dry_run = $options['dry_run'];
+    $file_name = $options['file'];
+    
+    if($dry_run != false){ //condition to get --help directives and execute showing help message and exit.
+        $objUser ->dryRun($dry_run, $dir, $file_name);
+    }
+    exit();
+}
+
+
 $file_name = $options['file'];
 
 $param['username'] = $options['u'];
@@ -55,15 +68,7 @@ $param['hostname'] = $options['h'];
 
 $param['create_table'] = $options['create_table'];
 
-$objUser = new Users();
-if(array_key_exists("dry_run",$options) && array_key_exists("file",$options)){
-    $dry_run = $options['dry_run'];
-    
-    if($dry_run != false){ //condition to get --help directives and execute showing help message and exit.
-        $objUser ->dryRun($dry_run, $dir, $file_name);
-    }
-    exit();
-}
+
 
 $objdatabase =  new Database($param);
 $objUser -> extractData($dir, $file_name,$objdatabase);
