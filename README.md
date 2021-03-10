@@ -5,7 +5,7 @@ os:ubuntu 18.04
 php-v:7.4
 Postgresq1l -v : 13
 
-<h2>commands>/h2>
+<h2>commands</h2>
 command:php src/user_upload.php --file=users.csv --create_table=users -u=root -p=postgres -h=localhost
 docker command:sudo docker-compose up -d
 
