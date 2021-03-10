@@ -5,6 +5,9 @@ os:ubuntu 18.04
 php-v:7.4
 Postgresq1l -v : 13
 
+commands
+command:php src/user_upload.php --file=users.csv --create_table=users -u=root -p=postgres -h=localhost
+docker command:sudo docker-compose up -d
 
 This is simple program that accepts csv file from command: php src/user_upload.php --file=users.csv --create_table=users -u=postgres -p=postgres -h=localhost 
 each paramenter functionality is described below:

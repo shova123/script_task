@@ -3,8 +3,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require 'vendor/autoload.php';
-//php src/user_upload.php --file=users.csv --create_table=users -u=root -p=postgres -h=localhost
-//sudo docker-compose up -d
+//command:php src/user_upload.php --file=users.csv --create_table=users -u=root -p=postgres -h=localhost
+//docker command:sudo docker-compose up -d
+//jenkins command :sudo docker run -p 8080:8080 jenkinsci/jenkins:lts
 
 $longoptions  = array(
     "file:",            // name of CSV file to be parsed --file "users.csv"
@@ -23,7 +24,7 @@ $objUser = new Users();
 $dir = getcwd(); // current directory
 if(array_key_exists("help",$options)){
     
-    $help_message = "
+$help_message = "
     ++++++ Command Line Directive Details ++++++
     
     --file 'users.csv'      - This is name of the CSV file to be parsed
